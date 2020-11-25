@@ -185,7 +185,7 @@ for i in range(0,18): # 파일 숫자 다시 집어넣어야함, for문안에 �
 			print('S 최대수요')
 		else :
 			print(latest_file[33:])
-			print('S타입 파일이름오류')
+			print('S타입 파일이름오류aaae')
 			break
 			
 	else :
