@@ -128,17 +128,22 @@ for i in range(0,18): # 파일 숫자 다시 집어넣어야함, for문안에 �
 #	glp(latest_file,tfile)
 	if latest_file[33:38]=='Gtype' :
 		if latest_file[39:41]=='LP' :
+			tfile.write('\n==G LP==\n')
 			glp(latest_file,tfile)
-			print('G LP')
 		elif latest_file[39:43]=='정기검침' :
+			tfile.write('\n==G 정기검침==\n')
 			print('G 정기검침')
 		elif latest_file[39:45]=='정기최대수요' :
+			tfile.write('\n==G 정기수요==\n')		
 			print('G 정기최대수요')
 		elif latest_file[39:45]=='현재최대수요' :
+			tfile.write('\n==G 현재최대수요==\n')
 			print('G 현재최대수요')
 		elif latest_file[39:45]=='순시전압전류' :
+			tfile.write('\n==G 순시전압전류==\n')		
 			print('G 순시전압전류')
 		elif latest_file[39:45]=='평균전압전류' :
+			tfile.write('\n==G 평균전압전류==\n')
 			print('G 평균전압전류')
 		else :
 			print(latest_file[33:])
@@ -147,17 +152,23 @@ for i in range(0,18): # 파일 숫자 다시 집어넣어야함, for문안에 �
 			
 	elif latest_file[33:39]=='AEtype' :
 		if latest_file[40:42]=='LP' :
+			tfile.write('\n==AE LP==\n')		
 			glp(latest_file,tfile)		
 			print('AE LP')
 		elif latest_file[40:44]=='정기검침' :
+			tfile.write('\n==AE 정기검침==\n')		
 			print('AE 정기검침')
 		elif latest_file[40:46]=='정기최대수요' :
+			tfile.write('\n==AE 정기최대수요==\n')		
 			print('AE 정기최대수요')
 		elif latest_file[40:46]=='현재최대수요' :
+			tfile.write('\n==AE 현재최대수요==\n')
 			print('AE 현재최대수요')
 		elif latest_file[40:46]=='순시전압전류' :
+			tfile.write('\n==AE 순시전압전류==\n')		
 			print('AE 순시전압전류')
 		elif latest_file[40:46]=='평균전압전류' :
+			tfile.write('\n==AE 평균전압전류==\n')		
 			print('AE 평균전압전류')
 		else :
 			print(latest_file[33:])
@@ -166,10 +177,13 @@ for i in range(0,18): # 파일 숫자 다시 집어넣어야함, for문안에 �
 
 	elif latest_file[33:38]=='Etype' :
 		if latest_file[39:41]=='LP' :
+			tfile.write('\n==E LP==\n')
 			print('E LP')
 		elif latest_file[39:43]=='정기검침' :
+			tfile.write('\n==E 정기검침==\n')
 			print('E 정기검침')
 		elif latest_file[39:45]=='최대부하전류' :
+			tfile.write('\n==E 최대부하전류==\n')		
 			print('E 최대부하전류')
 		else :
 			print(latest_file[33:])
@@ -178,10 +192,13 @@ for i in range(0,18): # 파일 숫자 다시 집어넣어야함, for문안에 �
 			
 	elif latest_file[33:38]=='Stype' :
 		if latest_file[39:41]=='LP' :
+			tfile.write('\n==S LP==\n')		
 			print('S LP')
 		elif latest_file[39:45]=='현재정기검침' :
+			tfile.write('\n==S 현재/정기검침==\n')		
 			print('S 정기검침')
 		elif latest_file[39:43]=='최대수요' :
+			tfile.write('\n==S 최대수요==\n')		
 			print('S 최대수요')
 		else :
 			print(latest_file[33:])
