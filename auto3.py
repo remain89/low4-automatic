@@ -496,6 +496,7 @@ for i in range(0,18): # 파일 숫자 다시 집어넣어야함, for문안에 �
 			print('S LP')
 		elif latest_file[39:45]=='현재정기검침' :
 			tfile.write('\n==S 현재/정기검침==\n')		
+			srg(latest_file,tfile)
 			print('S 정기검침')
 		elif latest_file[39:43]=='최대수요' :
 			tfile.write('\n==S 최대수요==\n')		
