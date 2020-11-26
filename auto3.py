@@ -193,6 +193,7 @@ for i in range(0,18): # 파일 숫자 다시 집어넣어야함, for문안에 �
 	elif latest_file[33:38]=='Stype' :
 		if latest_file[39:41]=='LP' :
 			tfile.write('\n==S LP==\n')		
+			glp(latest_file,tfile)
 			print('S LP')
 		elif latest_file[39:45]=='현재정기검침' :
 			tfile.write('\n==S 현재/정기검침==\n')		
