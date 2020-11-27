@@ -442,10 +442,9 @@ def grd(fname,tfile): #G,AE타입 정기수요 데이터
 		#  data8=data8.drop_duplicates('CTime',keep='first') # 시간 중복데이터 제거 
 			k=data8.AP.count() # 하루치 LP갯수
 			#개수 분석부
-			if k!=6: #일일 LP 개수가 정상이 아닐경우 체크
+			if k!=6 and k!=12 and k!=18 and k!=24: #일일 개수가 정상이 아닐경우 체크
 				if k!=0:  
-					if k!=12:
-						printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
+					printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
 						
 			#MTime 분석부
 			data9=data8[(data8.ITime==data8.MTime)] #MTime이 ITime과 같을때
@@ -472,7 +471,7 @@ def grd(fname,tfile): #G,AE타입 정기수요 데이터
 			if data10.empty==False: #하나라도 쓰레기값 범위인 경우
 				printall(3,data6.MeterID[i],data7.CTime[j],str(k),tfile) 		
 				
-def sgd(fname,tfile): #G,AE타입 현재수요 데이터
+def sgd(fname,tfile): #S타입 정기/현재수요 데이터
 	data=pd.read_csv(fname)
 	data=data.replace(['"','='],['',''],regex=True) # 특수문자 제거
 	data2=data[[" Meter ID"," Received Time"," ITime"," MTime"," AP"," TAP"]]
@@ -504,10 +503,9 @@ def sgd(fname,tfile): #G,AE타입 현재수요 데이터
 		#  data8=data8.drop_duplicates('CTime',keep='first') # 시간 중복데이터 제거 
 			k=data8.AP.count() # 하루치 LP갯수
 			#개수 분석부
-			if k!=6: #일일 LP 개수가 정상이 아닐경우 체크
+			if k!=6 and k!=12 and k!=18 and k!=24: #일일 개수가 정상이 아닐경우 체크
 				if k!=0:  
-					if k!=12:
-						printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
+					printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
 						
 			#MTime 분석부
 			data9=data8[(data8.ITime==data8.MTime)] #MTime이 ITime과 같을때
