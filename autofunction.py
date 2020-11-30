@@ -218,7 +218,7 @@ def grg(fname,tfile): #G,AE타입 정기검침
 		#  data8=data8.drop_duplicates('CTime',keep='first') # 시간 중복데이터 제거 
 			k=data8.APT1.count() # 하루치 LP갯수
  
-			if k!=6: #일일 LP 개수가 정상이 아닐경우 체크
+			if k!=6 or k!=12 or k!=24 : #일일 LP 개수가 정상이 아닐경우 체크
 				if k!=0:  
 					if k!=12:
 						printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
@@ -268,20 +268,20 @@ def erg(fname,tfile): #E타입 정기검침
 #  data8=data8.drop_duplicates('CTime',keep='first') # 시간 중복데이터 제거 
 			k=data8.SAP.count() # 하루치 LP갯수
  
-			if k!=6: #일일 LP 개수가 정상이 아닐경우 체크
+			if k!=6 or k!=12 : #일일 LP 개수가 정상이 아닐경우 체크
 				if k!=0:  
 					printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
-				data8['SAP']=pd.to_numeric(data8['SAP'],errors='coerce') #쓰레기값 여부 확인을 위해 datatype 변경
-				data8['Status']=pd.to_numeric(data8['Status'],errors='coerce')   
+			data8['SAP']=pd.to_numeric(data8['SAP'],errors='coerce') #쓰레기값 여부 확인을 위해 datatype 변경
+			data8['Status']=pd.to_numeric(data8['Status'],errors='coerce')   
 
-				check=data8['SAP'].isnull().sum()+data8['Status'].isnull().sum()
-				if check>0:
-					printall(2,data6.MeterID[i],data7.CTime[j],str(k),tfile)
+			check=data8['SAP'].isnull().sum()+data8['Status'].isnull().sum()
+			if check>0:
+				printall(2,data6.MeterID[i],data7.CTime[j],str(k),tfile)
    
-				else :
-					data10=data8[data8['SAP']>1000000] #SAP의 쓰레기값 조건 범위 확인
-					data10=data10+data8[data8['SAP']<0]
-					data10=data10+data8[data8['Status']!=1]	 
+			else :
+				data10=data8[data8['SAP']>1000000] #SAP의 쓰레기값 조건 범위 확인
+				data10=data10+data8[data8['SAP']<0]
+				data10=data10+data8[data8['Status']!=1]	 
 			if data10.empty==False: #하나라도 쓰레기값 범위인 경우
 				printall(3,data6.MeterID[i],data7.CTime[j],str(k),tfile)	      
 
@@ -320,10 +320,11 @@ def srg(fname,tfile): #S타입 정기/현재검침
 			k=data8.APT.count() # 하루치 정기검침 갯수
 			l=data9.APT.count() # 하루치 현재검침 갯수
 		 
-			if k!=0 and k!=6: #일일 LP 개수가 정상이 아닐경우 체크
-				print(k,'개 입니다. 1')
-				tfile.write('정기 검침\n')		  
-				printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
+			if k!=0: #일일 LP 개수가 정상이 아닐경우 체크
+				if k==6 or k==12:
+					print(k,'개 입니다. 1')
+					tfile.write('정기 검침\n')		  
+					printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
 			if not(94<l<97): #일일 LP 개수가 정상이 아닐경우 체크
 				if k!=0:  
 					tfile.write('현재 검침\n')				  
@@ -451,7 +452,8 @@ def grd(fname,tfile): #G,AE타입 정기수요 데이터
 			data9=data9+data8[(data8.CTime==data8.MTime)] #MTime이 Received time과 같을때
 			if data9.empty==False:
 				printall(4,data6.MeterID[i],data7.CTime[j],str(k),tfile) 
-				'''
+				
+			'''
 			data10=data9[['MTime']] # 시간축 데이터만 잘라냄
 			data10['MTime']=data10['MTime'].apply(lambda f:f.split()[0]) # MTime이 2000년으로 출력되는경우
 			data10=data10[(data10.MTime=='2000')]
