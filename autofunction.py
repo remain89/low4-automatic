@@ -533,3 +533,80 @@ def sgd(fname,tfile): #S타입 정기/현재수요 데이터
 		 
 			if data10.empty==False: #하나라도 쓰레기값 범위인 경우
 				printall(3,data6.MeterID[i],data7.CTime[j],str(k),tfile) 
+				
+def gva(fname,tfile): #G,AE타입 순시전압 데이터
+	data=pd.read_csv(fname)
+	data=data.replace(['"','='],['',''],regex=True) # 특수문자 제거
+	data2=data[[" Meter ID"," Received Time"," ITime"," MTime"," INS_AMP_A"," INS_VOL_A"," INS_VOL_THD_A"," INS_PF_A"," INS_VI_Phase_A"," INS_TEMP"]]
+	data2.rename(columns={' INS_AMP_A':'AMP'},inplace=True) #이하 처리를 위한 행제목 변경
+	data2.rename(columns={' INS_VOL_A':'VOL'},inplace=True)
+	data2.rename(columns={' INS_VOL_THD_A':'THD'},inplace=True)
+	data2.rename(columns={' INS_PF_A':'PF'},inplace=True)
+	data2.rename(columns={' INS_VI_Phase_A':'PH'},inplace=True)
+	data2.rename(columns={' INS_TEMP':'TEMP'},inplace=True)
+	data2.rename(columns={' ITime':'ITime'},inplace=True)	   
+	data2.rename(columns={' MTime':'MTime'},inplace=True)	   
+	data2.rename(columns={' Meter ID':'MeterID'},inplace=True)
+	data2.rename(columns={' Received Time':'CTime'},inplace=True)
+
+	data2['AMP']=pd.to_numeric(data2['AMP'],errors='coerce') #쓰레기값 여부 확인을 위해 datatype 변경
+	data2['VOL']=pd.to_numeric(data2['VOL'],errors='coerce')
+	data2['THD']=pd.to_numeric(data2['THD'],errors='coerce')
+	data2['PF']=pd.to_numeric(data2['PF'],errors='coerce')
+	data2['PH']=pd.to_numeric(data2['PH'],errors='coerce')
+	data2['TEMP']=pd.to_numeric(data2['TEMP'],errors='coerce')
+	   
+	data6=data2.drop_duplicates('MeterID',keep='first') # 미터정보만 남김
+	data6.MeterID.count() #전체 미터 갯수
+	data6.MeterID.values #전체 미터 번호
+	data6=data6.reset_index(drop=True)
+	   
+	data7=data2[['CTime']] # 시간축 데이터만 잘라냄
+	data7['CTime']=data7['CTime'].apply(lambda e:e.split()[0]) # 블록단위로 자름
+	data7=data7.drop_duplicates('CTime',keep='first')
+	data7.sort_values('CTime')
+	data7=data7.reset_index(drop=True)
+	   
+	for i in range(0,data6.MeterID.count()):
+		for j in range(0,data7.CTime.count()):
+			data8=data2[(data2.MeterID==data6.MeterID[i])] # 아래의 경우 2*o로 사용가능
+			data8=data8[(data8['CTime'].str.contains(data7.CTime[j]))]
+			k=data8.AP.count() # 하루치 LP갯수
+			#개수 분석부
+			if k!=24: #일일 개수가 정상이 아닐경우 체크
+				if k!=0:  
+					printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
+						
+			#MTime 분석부
+			data9=data8[(data8.ITime==data8.MTime)] #MTime이 ITime과 같을때
+			data9=data9+data8[(data8.CTime==data8.MTime)] #MTime이 Received time과 같을때
+			if data9.empty==False:
+				printall(4,data6.MeterID[i],data7.CTime[j],str(k),tfile) 
+				
+			'''
+			data10=data9[['MTime']] # 시간축 데이터만 잘라냄
+			data10['MTime']=data10['MTime'].apply(lambda f:f.split()[0]) # MTime이 2000년으로 출력되는경우
+			data10=data10[(data10.MTime=='2000')]
+			if data10.empty==False:
+				printall(4,data6.MeterID[i],data7.CTime[j],str(k),tfile) 
+			'''
+			#데이터 분석부
+			check=data8['AMP'].isnull().sum()+data8['VOL'].isnull().sum()+data8['THD'].isnull().sum()+data8['PF'].isnull().sum()+data8['PH'].isnull().sum()+data8['TEMP'].isnull().sum()
+			if check>0:
+				printall(2,data6.MeterID[i],data7.CTime[j],str(k),tfile)
+			else :			
+				data10=data8[data8['AMP']>0] #FEP의 쓰레기값 조건 범위 확인
+				data10=data10+data8[data8['AMP']<10] #FEP의 쓰레기값 조건 범위 확인
+				data10=data10+data8[data8['VOL']>240]
+				data10=data10+data8[data8['VOL']<210]
+				data10=data10+data8[data8['THD']>100]
+				data10=data10+data8[data8['THD']<0]
+				data10=data10+data8[data8['PF']>100]
+				data10=data10+data8[data8['PF']<0]
+				data10=data10+data8[data8['PH']>360]
+				data10=data10+data8[data8['PH']<0]
+				data10=data10+data8[data8['TEMP']>40]
+				data10=data10+data8[data8['TEMP']<10]
+				
+			if data10.empty==False: #하나라도 쓰레기값 범위인 경우
+				printall(3,data6.MeterID[i],data7.CTime[j],str(k),tfile) 		
