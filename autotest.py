@@ -9,15 +9,21 @@ import numpy as np
 from time import sleep
 from autofunction import *
 
-path='C:\\AAA-NURI\\EmuAgent\\Result\\분석결과\\'+str(datetime.today().month)+str(datetime.today().day)
+jumpcodem=""
+jumpcoded=""
+if int(datetime.today().month)<10
+	jumpcodem="0"
+if int(datetime.today().day)<10:
+	jumpcoded="0"
+path='C:\\AAA-NURI\\EmuAgent\\Result\\분석결과\\'+jumpcodem+str(datetime.today().month)+jumpcoded+str(datetime.today().day)
 os.makedirs(path)
-filename=path+'\\'+str(datetime.today().year)+'-'+str(datetime.today().month)+'-'+str(datetime.today().day)+'-'+'분석 결과.txt'
+filename=path+'\\'+str(datetime.today().year)+'-'+jumpcodem+str(datetime.today().month)+'-'+jumpcoded+str(datetime.today().day)+'-'+'분석 결과.txt'
 tfile = open(filename, mode='wt', encoding='utf-8')
 
 for i in range(0,18): # 파일 숫자 다시 집어넣어야함, for문안에 전체 기능 넣으면 될것같음
 
-	list_of_files = glob.glob('C:\\AAA-NURI\\EmuAgent\\Result\\'+str(datetime.today().month)+str(datetime.today().day)+'\\*') # Result 결과가 저장되는 폴더명
-	
+	list_of_files = glob.glob('C:\\AAA-NURI\\EmuAgent\\Result\\'+jumpcodem+str(datetime.today().month)+jumpcoded+str(datetime.today().day)+'\\*') # Result 결과가 저장되는 폴더명
+	#print(str(datetime.today().month)+jumpcode+str(datetime.today().day)+'\\*')
 	latest_file = max(list_of_files, key=os.path.getctime) # 가장 최근 생성된 파일의 경로
 #	print(latest_file)
 #	glp(latest_file,tfile)
