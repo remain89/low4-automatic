@@ -11,7 +11,7 @@ from autofunction import *
 
 jumpcodem=""
 jumpcoded=""
-if int(datetime.today().month)<10
+if int(datetime.today().month)<10:
 	jumpcodem="0"
 if int(datetime.today().day)<10:
 	jumpcoded="0"
