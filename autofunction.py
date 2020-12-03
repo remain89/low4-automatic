@@ -218,10 +218,9 @@ def grg(fname,tfile): #G,AE타입 정기검침
 		#  data8=data8.drop_duplicates('CTime',keep='first') # 시간 중복데이터 제거 
 			k=data8.APT1.count() # 하루치 LP갯수
  
-			if k!=6 or k!=12 or k!=24 : #일일 LP 개수가 정상이 아닐경우 체크
+			if not(k==6 or k==12 or k==18 or k==24) : #일일 LP 개수가 정상이 아닐경우 체크
 				if k!=0:  
-					if k!=12:
-						printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
+					printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
 
 			check=data8['APT1'].isnull().sum()+data8['APT2'].isnull().sum()+data8['RPT'].isnull().sum()+data8['LPT'].isnull().sum()+data8['PFT'].isnull().sum()
 			if check>0:
@@ -268,8 +267,8 @@ def erg(fname,tfile): #E타입 정기검침
 #  data8=data8.drop_duplicates('CTime',keep='first') # 시간 중복데이터 제거 
 			k=data8.SAP.count() # 하루치 LP갯수
  
-			if k!=6 or k!=12 : #일일 LP 개수가 정상이 아닐경우 체크
-				if k!=0:  
+			if not(k==6 or k==12 or k==18 or k==24) : #일일 정기검침 개수가 정상이 아닐경우 체크
+				if k!=0:
 					printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
 			data8['SAP']=pd.to_numeric(data8['SAP'],errors='coerce') #쓰레기값 여부 확인을 위해 datatype 변경
 			data8['Status']=pd.to_numeric(data8['Status'],errors='coerce')   
@@ -321,16 +320,16 @@ def srg(fname,tfile): #S타입 정기/현재검침
 			l=data9.APT.count() # 하루치 현재검침 갯수
 		 
 			if k!=0: #일일 LP 개수가 정상이 아닐경우 체크
-				if k==6 or k==12:
+				if not(k==6 or k==12 or k==18 or k==24):
 					print(k,'개 입니다. 1')
 					tfile.write('정기 검침\n')		  
 					printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
-			if not(94<l<97): #일일 LP 개수가 정상이 아닐경우 체크
-				if k!=0:  
+			if not(94<l<98): #일일 LP 개수가 정상이 아닐경우 체크
+				if l!=0:  
 					tfile.write('현재 검침\n')				  
 					printall(1,data6.MeterID[i],data7.CTime[j],str(l),tfile)
 		   
-			check=data8['APT'].isnull().sum()+data8['RPT'].isnull().sum()+data8['PFT'].isnull().sum()
+			check=data8['APT'].isnull().sum()+data8['RPT'].isnull().sum()+data8['PFT'].isnull().sum()+data9['APT'].isnull().sum()+data9['RPT'].isnull().sum()+data9['PFT'].isnull().sum()
 			if check>0:
 				printall(2,data6.MeterID[i],data7.CTime[j],str(k),tfile)
 			else :
@@ -476,13 +475,14 @@ def grd(fname,tfile): #G,AE타입 정기수요 데이터
 def sgd(fname,tfile): #S타입 정기/현재수요 데이터
 	data=pd.read_csv(fname)
 	data=data.replace(['"','='],['',''],regex=True) # 특수문자 제거
-	data2=data[[" Meter ID"," Received Time"," ITime"," MTime"," AP"," TAP"]]
+	data2=data[[" Meter ID"," Received Time"," ITime"," MTime"," AP"," TAP"," 검침구분"]]
 	data2.rename(columns={' AP':'AP'},inplace=True) #이하 처리를 위한 행제목 변경
 	data2.rename(columns={' TAP':'TAP'},inplace=True)
 	data2.rename(columns={' ITime':'ITime'},inplace=True)	   
 	data2.rename(columns={' MTime':'MTime'},inplace=True)	   
 	data2.rename(columns={' Meter ID':'MeterID'},inplace=True)
 	data2.rename(columns={' Received Time':'CTime'},inplace=True)
+	data2.rename(columns={' 검침구분':'sel'},inplace=True)
 
 	data2['AP']=pd.to_numeric(data2['AP'],errors='coerce') #쓰레기값 여부 확인을 위해 datatype 변경
 	data2['TAP']=pd.to_numeric(data2['TAP'],errors='coerce')
@@ -502,27 +502,40 @@ def sgd(fname,tfile): #S타입 정기/현재수요 데이터
 		for j in range(0,data7.CTime.count()):
 			data8=data2[(data2.MeterID==data6.MeterID[i])] # 아래의 경우 2*o로 사용가능
 			data8=data8[(data8['CTime'].str.contains(data7.CTime[j]))]
-		#  data8=data8.drop_duplicates('CTime',keep='first') # 시간 중복데이터 제거 
-			k=data8.AP.count() # 하루치 LP갯수
+			data9=data8[(data8['sel'].str.contains("현재수요"))]
+			data8=data8[(data8['sel'].str.contains("정기수요"))]
+			k=data8.AP.count() # 하루치 정기검침 갯수
+			l=data9.AP.count() # 하루치 현재검침 갯수
+
 			#개수 분석부
-			if k!=6 and k!=12 and k!=18 and k!=24: #일일 개수가 정상이 아닐경우 체크
-				if k!=0:  
+			
+			if k!=0: #일일 LP 개수가 정상이 아닐경우 체크
+				if not(k==6 or k==12 or k==18 or k==24):
+					print(k,'개 입니다. 1')
+					tfile.write('정기 수요\n')		  
 					printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
+
+			if l!=0: #일일 LP 개수가 정상이 아닐경우 체크
+				if not(l==6 or l==12 or l==18 or l==24):
+					print(l,'개 입니다. 1')
+					tfile.write('현재 수요\n')		  
+					printall(1,data6.MeterID[i],data7.CTime[j],str(l),tfile)			
 						
 			#MTime 분석부
-			data9=data8[(data8.ITime==data8.MTime)] #MTime이 ITime과 같을때
-			data9=data9+data8[(data8.CTime==data8.MTime)] #MTime이 Received time과 같을때
-			if data9.empty==False:
-				printall(4,data6.MeterID[i],data7.CTime[j],str(k),tfile) 
-				'''
-			data10=data9[['MTime']] # 시간축 데이터만 잘라냄
-			data10['MTime']=data10['MTime'].apply(lambda f:f.split()[0]) # MTime이 2000년으로 출력되는경우
-			data10=data10[(data10.MTime=='2000')]
+			data10=data8[(data8.ITime==data8.MTime)] #MTime이 ITime과 같을때
+			data10=data10+data8[(data8.CTime==data8.MTime)] #MTime이 Received time과 같을때
 			if data10.empty==False:
+				tfile.write('정기 수요\n')
 				printall(4,data6.MeterID[i],data7.CTime[j],str(k),tfile) 
-			'''
+				
+			data10=data9[(data9.ITime==data9.MTime)] #MTime이 ITime과 같을때
+			data10=data10+data9[(data9.CTime==data9.MTime)] #MTime이 Received time과 같을때
+			if data10.empty==False:
+				tfile.write('현재 수요\n')
+				printall(4,data6.MeterID[i],data7.CTime[j],str(k),tfile) 	
+
 			#데이터 분석부
-			check=data8['AP'].isnull().sum()+data8['TAP'].isnull().sum()
+			check=data8['AP'].isnull().sum()+data8['TAP'].isnull().sum()+data9['AP'].isnull().sum()+data9['TAP'].isnull().sum()
 			if check>0:
 				printall(2,data6.MeterID[i],data7.CTime[j],str(k),tfile)
 			else :			
@@ -530,9 +543,19 @@ def sgd(fname,tfile): #S타입 정기/현재수요 데이터
 				data10=data10+data8[data8['AP']<0] #FEP의 쓰레기값 조건 범위 확인
 				data10=data10+data8[data8['TAP']>1000000]
 				data10=data10+data8[data8['TAP']<0]		 
+				
+				data11=data9[data9['AP']>1000000] #FEP의 쓰레기값 조건 범위 확인
+				data11=data11+data9[data9['AP']<0] #FEP의 쓰레기값 조건 범위 확인
+				data11=data11+data9[data9['TAP']>1000000]
+				data11=data11+data9[data9['TAP']<0]		 
 		 
 			if data10.empty==False: #하나라도 쓰레기값 범위인 경우
+				tfile.write('정기 수요\n')
 				printall(3,data6.MeterID[i],data7.CTime[j],str(k),tfile) 
+				
+			if data11.empty==False: #하나라도 쓰레기값 범위인 경우
+				tfile.write('현재 수요\n')
+				printall(3,data6.MeterID[i],data7.CTime[j],str(l),tfile) 	
 				
 def gva(fname,tfile): #G,AE타입 순시전압 데이터
 	data=pd.read_csv(fname)
@@ -612,9 +635,8 @@ def gva(fname,tfile): #G,AE타입 순시전압 데이터
 				
 			if data10.empty==False: #하나라도 쓰레기값 범위인 경우
 				printall(3,data6.MeterID[i],data7.CTime[j],str(k),tfile) 		
-				
-				
-def emax(fname,tfile): #G,AE타입 순시전압 데이터
+						
+def emax(fname,tfile): #E타입 최대부하전류
 	data=pd.read_csv(fname)
 	data=data.replace(['"','='],['',''],regex=True) # 특수문자 제거
 	data2=data[[" Meter ID"," Received Time"," ITime"," Max Current"]]
@@ -643,7 +665,7 @@ def emax(fname,tfile): #G,AE타입 순시전압 데이터
 			data8=data8[(data8['CTime'].str.contains(data7.CTime[j]))]
 			k=data8.MC.count() # 하루치 LP갯수
 			#개수 분석부
-			if k!=6 and k!=12: #일일 개수가 정상이 아닐경우 체크
+			if not(k==6 or k==12 or k==18 or k==24): #일일 개수가 정상이 아닐경우 체크
 				if k!=0:  
 					printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
 			#MTime은 오류가 나서 잠정적으로 비워둠, 추후 수정 요망
