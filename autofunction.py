@@ -91,18 +91,18 @@ def elp(fname,tfile): #E타입 LP검침
 			data8['WC']=pd.to_numeric(data8['WC'],errors='coerce')   
 				# print(data8) #데이터 맞게 가지고 있음 
 			if k!=96: #일일 LP 개수가 정상이 아닐경우 체크
-				if k!=0:  
+				if k!=0:
 					printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
 			check=data8['FEP'].isnull().sum()+data8['WC'].isnull().sum()
 			if check>0:
 				printall(2,data6.MeterID[i],data7.CTime[j],str(k),tfile)				
 			else:	
 				if kk==-1 :
-					data10=data8[data8['FEP']>1000000]
+					data10=data8[data8['FEP']>2000000]
 				else :		   
 					data10=data8[data8['FEP']>bvalue]
 					data10=data10+data8[data8['FEP']<svalue]	 
-					data10=data10+data8[data8['FEP']>1000000] #FEP의 쓰레기값 조건 범위 확인		 
+					data10=data10+data8[data8['FEP']>2000000] #FEP의 쓰레기값 조건 범위 확인
 					data10=data10+data8[data8['FEP']<0] #FEP의 쓰레기값 조건 범위 확인
 					data10=data10+data8[data8['WC']>1]
 					data10=data10+data8[data8['WC']<0]		 		
@@ -167,17 +167,17 @@ def glp(fname,tfile): #G,AE,S타입 LP검침
 				printall(2,data6.MeterID[i],data7.CTime[j],str(k),tfile)				
 			else:	
 				if kk==-1 :
-					data10=data8[data8['FEP']>1000000]
+					data10=data8[data8['FEP']>2000000]
 				else :		   
 					data10=data8[data8['FEP']>bvalue]
 					data10=data10+data8[data8['FEP']<svalue]	 
-					data10=data10+data8[data8['FEP']>1000000] #FEP의 쓰레기값 조건 범위 확인		 
+					data10=data10+data8[data8['FEP']>2000000] #FEP의 쓰레기값 조건 범위 확인
 					data10=data10+data8[data8['FEP']<0] #FEP의 쓰레기값 조건 범위 확인
-					data10=data10+data8[data8['LARAP']>1000000]
+					data10=data10+data8[data8['LARAP']>2000000]
 					data10=data10+data8[data8['LARAP']<0]		 
-					data10=data10+data8[data8['LERAP']>1000000]
+					data10=data10+data8[data8['LERAP']>2000000]
 					data10=data10+data8[data8['LERAP']<0]
-					data10=data10+data8[data8['AP']>1000000]
+					data10=data10+data8[data8['AP']>2000000]
 					data10=data10+data8[data8['AP']<0]		
 				if data10.empty==False: #하나라도 쓰레기값 범위인 경우
 					printall(3,data6.MeterID[i],data7.CTime[j],str(k),tfile)	 	 
@@ -226,13 +226,13 @@ def grg(fname,tfile): #G,AE타입 정기검침
 			if check>0:
 				printall(2,data6.MeterID[i],data7.CTime[j],str(k),tfile)
 			else :			
-				data10=data8[data8['APT1']>1000000] #FEP의 쓰레기값 조건 범위 확인
+				data10=data8[data8['APT1']>2000000] #FEP의 쓰레기값 조건 범위 확인
 				data10=data10+data8[data8['APT1']<0] #FEP의 쓰레기값 조건 범위 확인
-				data10=data10+data8[data8['APT2']>1000000]
+				data10=data10+data8[data8['APT2']>2000000]
 				data10=data10+data8[data8['APT2']<0]		 
-				data10=data10+data8[data8['RPT']>1000000]
+				data10=data10+data8[data8['RPT']>2000000]
 				data10=data10+data8[data8['RPT']<0]
-				data10=data10+data8[data8['LPT']>1000000]
+				data10=data10+data8[data8['LPT']>2000000]
 				data10=data10+data8[data8['LPT']<0]		 
 				data10=data10+data8[data8['PFT']>1]
 				data10=data10+data8[data8['PFT']<-1]	
@@ -278,7 +278,7 @@ def erg(fname,tfile): #E타입 정기검침
 				printall(2,data6.MeterID[i],data7.CTime[j],str(k),tfile)
    
 			else :
-				data10=data8[data8['SAP']>1000000] #SAP의 쓰레기값 조건 범위 확인
+				data10=data8[data8['SAP']>2000000] #SAP의 쓰레기값 조건 범위 확인
 				data10=data10+data8[data8['SAP']<0]
 				data10=data10+data8[data8['Status']!=1]	 
 			if data10.empty==False: #하나라도 쓰레기값 범위인 경우
@@ -333,17 +333,17 @@ def srg(fname,tfile): #S타입 정기/현재검침
 			if check>0:
 				printall(2,data6.MeterID[i],data7.CTime[j],str(k),tfile)
 			else :
-				data10=data8[data8['APT']>10000000]
+				data10=data8[data8['APT']>20000000]
 				data10=data10+data8[data8['APT']<0]
-				data10=data10+data8[data8['RPT']>10000000]
-				data10=data10+data8[data8['RPT']>10000000]
+				data10=data10+data8[data8['RPT']>20000000]
+				data10=data10+data8[data8['RPT']>20000000]
 				data10=data10+data8[data8['PFT']>1]
 				data10=data10+data8[data8['PFT']<-1]  
 
-				data11=data9[data9['APT']>10000000]
+				data11=data9[data9['APT']>20000000]
 				data11=data11+data9[data9['APT']<0]
-				data11=data11+data9[data9['RPT']>10000000]
-				data11=data11+data9[data9['RPT']>10000000]
+				data11=data11+data9[data9['RPT']>20000000]
+				data11=data11+data9[data9['RPT']>20000000]
 				data11=data11+data9[data9['PFT']>1]
 				data11=data11+data9[data9['PFT']<-1] 
 		 
@@ -463,10 +463,10 @@ def grd(fname,tfile): #G,AE타입 정기수요 데이터
 			check=data8['AP'].isnull().sum()+data8['TAP'].isnull().sum()
 			if check>0:
 				printall(2,data6.MeterID[i],data7.CTime[j],str(k),tfile)
-			else :			
-				data10=data8[data8['AP']>1000000] #FEP의 쓰레기값 조건 범위 확인
+			else :
+				data10=data8[data8['AP']>2000000] #FEP의 쓰레기값 조건 범위 확인
 				data10=data10+data8[data8['AP']<0] #FEP의 쓰레기값 조건 범위 확인
-				data10=data10+data8[data8['TAP']>1000000]
+				data10=data10+data8[data8['TAP']>2000000]
 				data10=data10+data8[data8['TAP']<0]		 
 		 
 			if data10.empty==False: #하나라도 쓰레기값 범위인 경우
@@ -539,14 +539,14 @@ def sgd(fname,tfile): #S타입 정기/현재수요 데이터
 			if check>0:
 				printall(2,data6.MeterID[i],data7.CTime[j],str(k),tfile)
 			else :			
-				data10=data8[data8['AP']>1000000] #FEP의 쓰레기값 조건 범위 확인
+				data10=data8[data8['AP']>2000000] #FEP의 쓰레기값 조건 범위 확인
 				data10=data10+data8[data8['AP']<0] #FEP의 쓰레기값 조건 범위 확인
-				data10=data10+data8[data8['TAP']>1000000]
+				data10=data10+data8[data8['TAP']>2000000]
 				data10=data10+data8[data8['TAP']<0]		 
 				
-				data11=data9[data9['AP']>1000000] #FEP의 쓰레기값 조건 범위 확인
+				data11=data9[data9['AP']>2000000] #FEP의 쓰레기값 조건 범위 확인
 				data11=data11+data9[data9['AP']<0] #FEP의 쓰레기값 조건 범위 확인
-				data11=data11+data9[data9['TAP']>1000000]
+				data11=data11+data9[data9['TAP']>2000000]
 				data11=data11+data9[data9['TAP']<0]		 
 		 
 			if data10.empty==False: #하나라도 쓰레기값 범위인 경우
