@@ -507,7 +507,7 @@ for i in range(0,18): # 파일 숫자 다시 집어넣어야함, for문안에 �
 			break
 			
 	else :
-		print('파일이름 오류')
+		print('파일이름 오류aaa')
 		break
 
 	shutil.move(latest_file,path+'\\'+latest_file[33:]) #분석내용을 결과폴더로 옮김
