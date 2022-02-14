@@ -218,7 +218,7 @@ def grg(fname,tfile): #G,AE타입 정기검침
 		#  data8=data8.drop_duplicates('CTime',keep='first') # 시간 중복데이터 제거 
 			k=data8.APT1.count() # 하루치 LP갯수
  
-			if not(k==6 or k==12 or k==18 or k==24) : #일일 LP 개수가 정상이 아닐경우 체크
+			if not(k==6 or k==12 or k==18 or k==24 or k==36) : #정기검침 개수가 정상이 아닐경우 체크, G,AE의 경우 양방향이므로 *2배수도 PASS
 				if k!=0:  
 					printall(1,data6.MeterID[i],data7.CTime[j],str(k),tfile)
 
@@ -593,7 +593,7 @@ def gva(fname,tfile): #G,AE타입 순시전압 데이터
 	for i in range(0,data6.MeterID.count()):
 		for j in range(0,data7.CTime.count()):
 			data8=data2[(data2.MeterID==data6.MeterID[i])] # 아래의 경우 2*o로 사용가능
-			data8=data8[(data8['CTime'].str.contains(data7.CTime[j]))]
+			data8=data8[(data8['MTime'].str.contains(data7.CTime[j]))]
 			k=data8.AMP.count() # 하루치 LP갯수
 			#개수 분석부
 			if k!=24: #일일 개수가 정상이 아닐경우 체크
